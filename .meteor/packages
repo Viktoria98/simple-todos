@@ -22,3 +22,4 @@ accounts-ui
 accounts-password
 accounts-google
 google-config-ui
+meteortesting:mocha
