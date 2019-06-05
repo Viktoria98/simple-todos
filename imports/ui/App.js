@@ -1,16 +1,16 @@
-import React, { Component } from "react";
-import { withTracker } from "meteor/react-meteor-data";
-import ReactDOM from "react-dom";
+import React, { Component } from 'react';
+import { withTracker } from 'meteor/react-meteor-data';
+import ReactDOM from 'react-dom';
 import { Meteor } from 'meteor/meteor';
 
-import { Tasks } from "../api/tasks.js";
-import Task from "./Task.js";
-import AccountsUIWrapper from './AccountsUIWrapper.js';
+import { tasks } from '../api/tasks';
+import Task from './Task';
+import AccountsUIWrapper from './AccountsUIWrapper';
 
 class App extends Component {
   constructor(props) {
     super(props);
- 
+
     this.state = {
       hideCompleted: false,
     };
@@ -25,6 +25,7 @@ class App extends Component {
     Meteor.call('tasks.insert', text);
     // Clear form
     ReactDOM.findDOMNode(this.refs.textInput).value = "";
+    console.log(text);
   }
 
   toggleHideCompleted() {
@@ -34,6 +35,7 @@ class App extends Component {
   }
 
   renderTasks() {
+    console.log(this.props.tasks);
     let filteredTasks = this.props.tasks;
     if (this.state.hideCompleted) {
       filteredTasks = filteredTasks.filter(task => !task.checked);
@@ -41,7 +43,7 @@ class App extends Component {
     return filteredTasks.map((task) => {
       const currentUserId = this.props.currentUser && this.props.currentUser._id;
       const showPrivateButton = task.owner === currentUserId;
- 
+
       return (
         <Task
           key={task._id}
@@ -87,10 +89,9 @@ class App extends Component {
 }
 
 export default withTracker(() => {
-  Meteor.subscribe('tasks');
   return {
-    tasks: Tasks.find({}, { sort: { createdAt: -1 } }).fetch(),
-    incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
+    tasks: tasks.select(),
     currentUser: Meteor.user(),
   };
 })(App);
+

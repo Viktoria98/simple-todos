@@ -23,3 +23,4 @@ accounts-password
 accounts-google
 google-config-ui
 meteortesting:mocha
+meteorsteam:meteor-postgres
